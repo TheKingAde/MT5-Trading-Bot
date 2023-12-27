@@ -65,7 +65,7 @@ Waits for 30 seconds before the next iteration.
 
 ## Disclaimer
 
-This trading bot is for educational and demonstration purposes only.
+!This trading bot is for educational and demonstration purposes only!.
 
 Do not use it with real funds.
 
