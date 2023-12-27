@@ -18,7 +18,7 @@ Bash
 
 Edit Configuration Parameters:
 
-In the if __name__ == "__main__": section, modify the following values:
+In the mt5TradingBot.py file in the if __name__ == "__main__": section, modify the following values:
 
 
 login: Your MT5 account login number
