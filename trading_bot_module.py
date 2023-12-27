@@ -91,10 +91,10 @@ class TradingBot:
         self.calculate_sl_tp()
 
         for _ in range(100):
-            ohlc = pd.DataFrame(mt.copy_rates_range(ticker, mt.TIMEFRAME_M1, datetime(2023, 12, 21), datetime.now()))
-            ohlc['time'] = pd.to_datetime(ohlc['time'], unit='s')
-            print('currency pair {}'. format(ticker))
-            print(ohlc.tail(3))
+            # fetch and update financial data for a specified time period 
+            # ohlc = pd.DataFrame(mt.copy_rates_range(ticker, mt.TIMEFRAME_M1, datetime(2023, 12, 21), datetime.now()))
+            # ohlc['time'] = pd.to_datetime(ohlc['time'], unit='s')
+            
 
             # Add logic for buy and selling
             self.create_order(mt.ORDER_TYPE_BUY)
