@@ -111,7 +111,7 @@ class TradingBot:
             "type_time": self.mt.ORDER_TIME_GTC,
             "type_filling": self.mt.ORDER_FILLING_FOK,
         }
-        order = self.mt.order_send(request)    
+        order = self.mt.order_send(request)
 
         if order.retcode != mt.TRADE_RETCODE_DONE:
             if order_type == mt.ORDER_TYPE_BUY:
@@ -133,22 +133,19 @@ class TradingBot:
         self.calculate_sl_tp()
 
         for _ in range(5):
-            # fetch and update financial data for a specified time period 
+            # fetch and update financial data for a specified time period
             # ohlc = pd.DataFrame(mt.copy_rates_range(ticker, mt.TIMEFRAME_M1, datetime(2023, 12, 21), datetime.now()))
             # ohlc['time'] = pd.to_datetime(ohlc['time'], unit='s')
-            
-
             # Add logic for buy and selling
             buy_order = self.create_order(self.mt.ORDER_TYPE_BUY)
             sell_order = self.create_order(self.mt.ORDER_TYPE_SELL)
-    
-    
+
             time.sleep(5)
-            
+
             if buy_order:
                 close_buy = self.close_order(self.mt.ORDER_TYPE_SELL, self.buy_price)
             if sell_order:
                 close_sell = self.close_order(self.mt.ORDER_TYPE_BUY, self.sell_price)
-            
+
             time.sleep(5)
-            #os.system('cls' if os.name == 'nt' else 'clear')
+            # os.system('cls' if os.name == 'nt' else 'clear')
