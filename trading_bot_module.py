@@ -106,7 +106,7 @@ class TradingBot:
             "volume": self.qty,
             "type": order_type,
             "position": self.mt.positions_get()[0]._asdict()['ticket'],
-            "price": price,
+            "price": self.sell_price if order_type == mt.ORDER_TYPE_BUY else self.buy_price,
             "comment": "PYTHON SCRIPT CLOSE ORDER",
             "type_time": self.mt.ORDER_TIME_GTC,
             "type_filling": self.mt.ORDER_FILLING_FOK,
@@ -143,9 +143,9 @@ class TradingBot:
             time.sleep(5)
 
             if buy_order:
-                close_buy = self.close_order(self.mt.ORDER_TYPE_SELL, self.buy_price)
+                close_buy = self.close_order(self.mt.ORDER_TYPE_SELL)
             if sell_order:
-                close_sell = self.close_order(self.mt.ORDER_TYPE_BUY, self.sell_price)
+                close_sell = self.close_order(self.mt.ORDER_TYPE_BUY)
 
             time.sleep(5)
             # os.system('cls' if os.name == 'nt' else 'clear')
