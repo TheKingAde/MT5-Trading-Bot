@@ -70,18 +70,60 @@ class TradingBot:
             "tp": self.buy_tp if order_type == mt.ORDER_TYPE_BUY else self.sell_tp,
             "comment": "PYTHON SCRIPT CREATE ORDER",
             "type_time": mt.ORDER_TIME_GTC,
-            "type_filling": mt.ORDER_FILLING_IOC
+            "type_filling": mt.ORDER_FILLING_FOK,
         }
 
         order = self.mt.order_send(request)
 
         if order.retcode != mt.TRADE_RETCODE_DONE:
-            error_message = f"Error creating order: {order.comment}"
-            print(error_message)
+            if order_type == mt.ORDER_TYPE_BUY:
+                error_message = f"Error creating buy order: {order.comment}"
+                print(error_message)
+            if order_type == mt.ORDER_TYPE_SELL:
+                error_message = f"Error creating sell order: {order.comment}"
+                print(error_message)
         elif order_type == mt.ORDER_TYPE_BUY:
-            print("Buy Order: by {} {} lots at {}".format(self.ticker, self.qty, request["price"]))
+            print("Buy Order Created: by {} {} lots at {}".format(self.ticker, self.qty, request["price"]))
         elif order_type == mt.ORDER_TYPE_SELL:
-            print("Sell Order: by {} {} lots at {}".format(self.ticker, self.qty, request["price"]))
+            print("Sell Order Created: by {} {} lots at {}".format(self.ticker, self.qty, request["price"]))
+
+        return order
+
+    def close_order(self, order_type, price):
+        """
+        Closes a market order (buy or sell) by sending a closing order to MetaTrader 5.
+
+        Parameters:
+        - order_type (int): Type of order to close (BUY or SELL).
+        - price (float): Closing price for the order.
+
+        Returns:
+        - order (OrderSendResult): Result of the closing order.
+        """
+        request = {
+            "action": self.mt.TRADE_ACTION_DEAL,
+            "symbol": self.ticker,
+            "volume": self.qty,
+            "type": order_type,
+            "position": self.mt.positions_get()[0]._asdict()['ticket'],
+            "price": price,
+            "comment": "PYTHON SCRIPT CLOSE ORDER",
+            "type_time": self.mt.ORDER_TIME_GTC,
+            "type_filling": self.mt.ORDER_FILLING_FOK,
+        }
+        order = self.mt.order_send(request)    
+
+        if order.retcode != mt.TRADE_RETCODE_DONE:
+            if order_type == mt.ORDER_TYPE_BUY:
+                error_message = "Error closing sell order: {} at {}".format(order.comment, request["price"])
+                print(error_message)
+            if order_type == mt.ORDER_TYPE_SELL:
+                error_message = "Error closing buy order: {} at {}".format(order.comment, request["price"])
+                print(error_message)
+        elif order_type == mt.ORDER_TYPE_BUY:
+            print("Sell Order Closed: by {} {} lots at {}".format(self.ticker, self.qty, request["price"]))
+        elif order_type == mt.ORDER_TYPE_SELL:
+            print("Buy Order Closed: by {} {} lots at {}".format(self.ticker, self.qty, request["price"]))
 
         return order
 
@@ -90,15 +132,23 @@ class TradingBot:
         self.get_prices()
         self.calculate_sl_tp()
 
-        for _ in range(100):
+        for _ in range(5):
             # fetch and update financial data for a specified time period 
             # ohlc = pd.DataFrame(mt.copy_rates_range(ticker, mt.TIMEFRAME_M1, datetime(2023, 12, 21), datetime.now()))
             # ohlc['time'] = pd.to_datetime(ohlc['time'], unit='s')
             
 
             # Add logic for buy and selling
-            self.create_order(mt.ORDER_TYPE_BUY)
-            self.create_order(mt.ORDER_TYPE_SELL)
-
-            time.sleep(30)
-            os.system('cls' if os.name == 'nt' else 'clear')
+            buy_order = self.create_order(self.mt.ORDER_TYPE_BUY)
+            sell_order = self.create_order(self.mt.ORDER_TYPE_SELL)
+    
+    
+            time.sleep(5)
+            
+            if buy_order:
+                close_buy = self.close_order(self.mt.ORDER_TYPE_SELL, self.buy_price)
+            if sell_order:
+                close_sell = self.close_order(self.mt.ORDER_TYPE_BUY, self.sell_price)
+            
+            time.sleep(5)
+            #os.system('cls' if os.name == 'nt' else 'clear')

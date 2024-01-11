@@ -1,11 +1,12 @@
+#!/usr/bin/python3
 # Import the TradingBot class from the trading_bot_module
 from trading_bot_module import TradingBot
 
 if __name__ == "__main__":
     # MetaTrader 5 demo server credentials
-    login =  # input login
-    password = '' # input password
-    server = 'MetaQuotes-Demo'
+    login =  160408249 # change to your login
+    password = '@Adegoke001' # change to your password
+    server = 'ForexTimeFXTM-Demo01'
 
     # Trading parameters
     ticker = "NZDUSD"  # Replace with the currency of your choice
