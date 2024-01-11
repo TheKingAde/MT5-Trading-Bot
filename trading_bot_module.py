@@ -89,7 +89,7 @@ class TradingBot:
 
         return order
 
-    def close_order(self, order_type, price):
+    def close_order(self, order_type):
         """
         Closes a market order (buy or sell) by sending a closing order to MetaTrader 5.
 
